@@ -8,7 +8,7 @@ from typing import Optional
 
 # Constants
 CURRENT_TIME = "2025-02-01 14:37:21"
-CURRENT_USER = "alokyadav2020"
+CURRENT_USER = "🧘"
 
 class VoiceHandler:
     def __init__(self):
