@@ -3,4 +3,3 @@ langchain_anthropic
 streamlit
 SpeechRecognition
 python-dotenv
-pyaudio
