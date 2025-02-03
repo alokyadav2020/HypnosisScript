@@ -46,7 +46,7 @@ class ValidationAgent:
 
 class HypnosisScriptGenerator:
     def __init__(self):
-        self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0.7)
+        self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0.9,max_tokens_to_sample=8000)
         self.script_chain = LLMChain(
             llm=self.llm,
             prompt=SCRIPT_GENERATION_PROMPT
