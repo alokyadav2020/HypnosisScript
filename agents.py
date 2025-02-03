@@ -8,7 +8,7 @@ import streamlit as st
 
 class ConversationalAgent:
     def __init__(self):
-        self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=500,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0.7)
+        self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=500,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         # self.llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets['OPENAI_API_KEY'],temperature=0.7)
         self.memory = ConversationBufferMemory()
         self.conversation = ConversationChain(
