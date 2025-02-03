@@ -1,4 +1,4 @@
-pyaudio
+
 langchain
 langchain_anthropic
 langchain_openai
