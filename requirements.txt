@@ -1,5 +1,6 @@
 langchain
 langchain_anthropic
+langchain_openai
 streamlit
 SpeechRecognition
 python-dotenv
