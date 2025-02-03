@@ -6,6 +6,7 @@
 # import speech_recognition as sr
 # from typing import Optional
 
+
 # # Constants
 # CURRENT_TIME = "2025-02-01 14:37:21"
 # CURRENT_USER = "🧘"
@@ -166,7 +167,7 @@
 
 
 
-# main.py
+# # main.py
 import streamlit as st
 from datetime import datetime
 from agents import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
@@ -304,7 +305,7 @@ def main():
                 # transcript = "Your voice message has been recorded"  # This is a placeholder
                 try:
                     # transcript = sr.recognizer.recognize_google(st.session_state.last_audio)
-                    transcript = speech_to_text(st.session_state.last_audio)
+                    transcript = speech_to_text(audio_bytes)
                     if transcript:
                         # Show transcript
                         st.info(f"You said: {transcript}")

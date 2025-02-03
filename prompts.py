@@ -16,6 +16,7 @@ CONVERSATION_PROMPT = PromptTemplate(
     6. Ask about specific areas they want the hypnosis to focus on or avoid
 
     Guidelines:
+    - Comversation should be very realistic and empathetic, not robotic.
     - Ask one question at a time
     - Use the user's name once provided
     - Show empathy and understanding in responses
@@ -65,7 +66,7 @@ SCRIPT_GENERATION_PROMPT = PromptTemplate(
     
     Session DateTime: {datetime}
 
-    Generate a complete hypnosis script for about 20 minutes.:
+    Generate a complete hypnosis script for about 20 minutes, about more then 10,000 characters.:
     Make sure it should be personalized and empathetic.
     Make sure it should be relevant to the user's goals and emotional state.
     Make sure it should be age-appropriate and respectful.
@@ -82,5 +83,26 @@ SCRIPT_GENERATION_PROMPT = PromptTemplate(
 
     Ensure the script is personalized using the client's name and age-appropriate language.
     Incorporate their specific goals, emotional state, and preferences.
+
+
+Flow:
+
+Stays conversational but structured—prevents vague answers without feeling robotic.
+
+Prioritizes actionable details (e.g., "success looks like...") for script personalization.
+
+--Example Script Integration--
+
+If a user says:
+“I want to feel calm during work stress instead of panicking. Success would be staying focused during meetings. 
+My peaceful place is listening to rain sounds in my cozy chair.”
+
+Hypnosis Script Hooks:
+
+Anchor calm to the sound of rain and physical sensation of a cozy chair.
+
+Use metaphors like "imagine your thoughts flowing as smoothly as raindrops" during stress triggers.
+
+
     """
 )
