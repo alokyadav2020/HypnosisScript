@@ -4,3 +4,4 @@ streamlit
 SpeechRecognition
 python-dotenv
 langchain_community
+openai
