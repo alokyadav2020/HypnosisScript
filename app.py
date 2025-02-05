@@ -180,7 +180,7 @@ from openai import OpenAI
 
 # Constants
 CURRENT_TIME = "2025-02-03 14:56:58"
-CURRENT_USER = "alokyadav2020"
+CURRENT_USER = "🧘"
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
 def initialize_session_state():
     if 'messages' not in st.session_state:
@@ -280,7 +280,7 @@ def main():
                 f"I'll help you create a personalized hypnosis script. Let's begin our conversation to understand your needs better."
             )
         }
-        st.session_state.messages.append(welcome_message)
+        # st.session_state.messages.append(welcome_message)
         initial_response = st.session_state.conversation_agent.get_next_response(
             "Start the conversation by asking the first question."
         )
