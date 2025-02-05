@@ -186,11 +186,11 @@ def initialize_session_state():
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     if 'conversation_agent' not in st.session_state:
-        st.session_state.conversation_agent = ConversationalAgent()
+        st.session_state.conversation_agent = None #ConversationalAgent(llm_name)
     if 'validation_agent' not in st.session_state:
         st.session_state.validation_agent = ValidationAgent()
     if 'script_generator' not in st.session_state:
-        st.session_state.script_generator = HypnosisScriptGenerator()
+        st.session_state.script_generator = None # HypnosisScriptGenerator(llm_name)
     if 'script_generated' not in st.session_state:
         st.session_state.script_generated = False
     if 'last_audio' not in st.session_state:
@@ -217,8 +217,7 @@ def handle_user_input(user_input: str):
         if is_complete:
             with st.spinner("Generating your personalized hypnosis script..."):
                 script = st.session_state.script_generator.generate_script(
-                    conversation_history=conversation_history,
-                    datetime=CURRENT_TIME
+                    conversation_history=conversation_history
                 )
                 st.session_state.script_generated = True
                 st.session_state.messages.append({
@@ -236,22 +235,53 @@ def speech_to_text(audio_data):
     return transcript
 
 
+
 def main():
     st.title("AI Hypnosis Consultation")
-    
+
     initialize_session_state()
+    
+    
+        
     
     # Sidebar
     with st.sidebar:
+
+        selected_model = st.selectbox("Select a model", ["openai", "anthropic", "deepseek"])
+        if selected_model == "openai":
+            st.session_state.conversation_agent = ConversationalAgent(llm_name="openai")
+            st.session_state.script_generator = HypnosisScriptGenerator(llm_name="openai")
+           
+        elif selected_model == "anthropic":
+            st.session_state.conversation_agent = ConversationalAgent(llm_name="anthropic")
+            st.session_state.script_generator = HypnosisScriptGenerator(llm_name="anthropic")
+          
+          
+        elif selected_model == "deepseek":
+            st.session_state.conversation_agent = ConversationalAgent(llm_name="deepseek")
+            st.session_state.script_generator = HypnosisScriptGenerator(llm_name="deepseek")
+           
+          
+
+
+
+
         st.write(f"Current User: {CURRENT_USER}")
         st.write(f"Current Time (UTC): {CURRENT_TIME}")
+
+
         
         if st.button("Start New Chat"):
             st.session_state.messages = []
             st.session_state.script_generated = False
-            st.session_state.conversation_agent = ConversationalAgent()
+            st.session_state.conversation_agent =None # ConversationalAgent(llm_name)
             st.session_state.last_audio = None
             st.rerun()
+
+
+      
+
+
         
         input_method = st.radio(
             "Choose Input Method",

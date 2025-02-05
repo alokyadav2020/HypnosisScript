@@ -4,12 +4,20 @@ from langchain_anthropic import ChatAnthropic
 from langchain.chains import ConversationChain, LLMChain
 from langchain.memory import ConversationBufferMemory
 from prompts import CONVERSATION_PROMPT, VALIDATION_PROMPT, SCRIPT_GENERATION_PROMPT
+from langchain_deepseek import ChatDeepSeek
 import streamlit as st
 
 class ConversationalAgent:
-    def __init__(self):
-        self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=500,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
-        # self.llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets['OPENAI_API_KEY'],temperature=0.7)
+    def __init__(self,llm_name:str):
+        if llm_name == "openai":
+            self.llm = ChatOpenAI(model="gpt-4o-2024-08-06",max_completion_tokens=500, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
+        elif llm_name == "anthropic":
+           self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=500,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
+        elif llm_name == "deepseek":
+            self.llm = ChatDeepSeek(model_name="deepseek-reasoner",max_tokens=500,api_key=st.secrets['DEEPSEEK_API_KEY'],temperature=0)
+            
+
+        # 
         self.memory = ConversationBufferMemory()
         self.conversation = ConversationChain(
             llm=self.llm,
@@ -21,7 +29,7 @@ class ConversationalAgent:
     def get_next_response(self, user_input: str = None) -> str:
         if user_input is None:
             return self.conversation.predict(
-                input="Start the conversation by introducing yourself and asking for the user's name."
+                input="Start the conversation through prompt questions."
             )
         return self.conversation.predict(input=user_input)
 
@@ -45,15 +53,20 @@ class ValidationAgent:
         return result.strip().lower() == "true"
 
 class HypnosisScriptGenerator:
-    def __init__(self):
-        self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0.9,max_tokens_to_sample=8000)
+    def __init__(self,llm_name:str):
+        if llm_name == "openai":
+            self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=600, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
+        elif llm_name == "anthropic":
+           self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=6000,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
+        elif llm_name == "deepseek":
+            self.llm = ChatDeepSeek(model_name="gpt-3.5-turbo",max_tokens=6000,api_key=st.secrets['DEEPSEEK_API_KEY'],temperature=0)
+            
         self.script_chain = LLMChain(
             llm=self.llm,
             prompt=SCRIPT_GENERATION_PROMPT
         )
 
-    def generate_script(self, conversation_history: dict, datetime: str) -> str:
+    def generate_script(self, conversation_history: dict) -> str:
         return self.script_chain.run(
-            conversation_history=str(conversation_history),
-            datetime=datetime
+            conversation_history=str(conversation_history)
         )
