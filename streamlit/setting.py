@@ -172,7 +172,7 @@ with col1:
     conv_prompt = st.text_area(
         "Enter conversation prompt:",
         value=get_prompt('conversation_prompt'),
-        key='conv'
+        key='conv',height=400
     )
     if st.button("Save Conversation Prompt"):
         save_prompt('conversation_prompt', conv_prompt)
@@ -183,7 +183,7 @@ with col2:
     valid_prompt = st.text_area(
         "Enter validation prompt:",
         value=get_prompt('validation_prompt'),
-        key='valid'
+        key='valid',height=400
     )
     if st.button("Save Validation Prompt"):
         save_prompt('validation_prompt', valid_prompt)
@@ -194,7 +194,7 @@ with col3:
     script_prompt = st.text_area(
         "Enter script generation prompt:",
         value=get_prompt('script_generation_prompt'),
-        key='script'
+        key='script',height=400
     )
     if st.button("Save Script Prompt"):
         save_prompt('script_generation_prompt', script_prompt)
