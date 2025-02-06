@@ -3,7 +3,7 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain.chains import ConversationChain, LLMChain
 from langchain.memory import ConversationBufferMemory
-from prompts import CONVERSATION_PROMPT, VALIDATION_PROMPT, SCRIPT_GENERATION_PROMPT
+from src.prompts import CONVERSATION_PROMPT, VALIDATION_PROMPT, SCRIPT_GENERATION_PROMPT
 from langchain_deepseek import ChatDeepSeek
 import streamlit as st
 

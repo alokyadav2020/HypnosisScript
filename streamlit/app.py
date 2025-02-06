@@ -170,14 +170,17 @@
 # # main.py
 import streamlit as st
 from datetime import datetime
-from agents import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
-from models import ChatMessage
+from src.agents import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
+from src.models import ChatMessage
 import speech_recognition as sr
 from typing import Optional
 import time
 from openai import OpenAI
 
-
+st.set_page_config(
+    page_title="AI Hypnosis Consultation",
+    layout="centered",
+)
 # Constants
 CURRENT_TIME = "2025-02-03 14:56:58"
 CURRENT_USER = "🧘"
@@ -359,8 +362,8 @@ def main():
             handle_user_input(prompt)
             st.rerun()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+main()
 
 
 
