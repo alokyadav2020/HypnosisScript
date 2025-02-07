@@ -10,7 +10,7 @@ import streamlit as st
 class ConversationalAgent:
     def __init__(self,llm_name:str):
         if llm_name == "openai":
-            self.llm = ChatOpenAI(model="o3-mini",max_completion_tokens=500, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
+            self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=500, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
         elif llm_name == "anthropic":
            self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=500,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         elif llm_name == "deepseek":
@@ -55,7 +55,7 @@ class ValidationAgent:
 class HypnosisScriptGenerator:
     def __init__(self,llm_name:str):
         if llm_name == "openai":
-            self.llm = ChatOpenAI(model="o3-mini",max_completion_tokens=600, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
+            self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=600, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
         elif llm_name == "anthropic":
            self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=6000,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         elif llm_name == "deepseek":
