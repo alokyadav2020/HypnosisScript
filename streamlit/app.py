@@ -176,6 +176,8 @@ import speech_recognition as sr
 from typing import Optional
 import time
 from openai import OpenAI
+import io
+import wave
 
 st.set_page_config(
     page_title="AI Hypnosis Consultation",
@@ -237,7 +239,17 @@ def speech_to_text(audio_data):
         )
     return transcript
 
-
+def convert_audio_bytes_to_audio_data(audio_bytes):
+    """
+    Converts raw WAV audio bytes into a speech_recognition.AudioData object.
+    """
+    # Create an in-memory stream from the audio bytes
+    audio_stream = io.BytesIO(audio_bytes)
+    with wave.open(audio_stream, "rb") as wf:
+        sample_rate = wf.getframerate()
+        sample_width = wf.getsampwidth()
+        frame_data = wf.readframes(wf.getnframes())
+    return sr.AudioData(frame_data, sample_rate, sample_width)
 
 def main():
     st.title("AI Hypnosis Consultation")
@@ -322,29 +334,25 @@ def main():
 
     # Input handling
     if input_method == "Voice":
-        # Using st.audio_input for voice recording
+       
         audio_bytes = st.audio_input("Record your message")
-        # audio_bytes = audio_recorder(pause_threshold=2.0, sample_rate=41_000)
-        
-        # Check if new audio is recorded
         if audio_bytes is not None and audio_bytes != st.session_state.last_audio:
-            # st.session_state.last_audio = audio_bytes
-            
-            st.session_state.last_audio = st.audio(audio_bytes, format="audio/wav")
+            st.session_state.last_audio = audio_bytes
+            # st.audio(audio_bytes, format="audio/wav")
             
             with st.spinner("Processing your voice input..."):
-                # Here you would typically process the audio and get the transcript
-                # For now, we'll use a placeholder text
-                # transcript = "Your voice message has been recorded"  # This is a placeholder
                 try:
-                    # transcript = sr.recognizer.recognize_google(st.session_state.last_audio)
-                    transcript = speech_to_text(audio_bytes)
+                    audio_byte = audio_bytes.read()
+                    audio_data = convert_audio_bytes_to_audio_data(audio_byte)
+                    transcript = sr.Recognizer().recognize_google(audio_data)
                     if transcript:
                         # Show transcript
                         st.info(f"You said: {transcript}")
                         # Process the input
                         handle_user_input(transcript)
+                        
                         st.rerun()
+                        audio_bytes = None
                     
                 except sr.UnknownValueError:
                     st.error("Could not understand the audio. Please try again.")
@@ -353,7 +361,7 @@ def main():
                     st.error("Could not request results from speech recognition service")
                    
                 except Exception as e:
-                    st.error(f"Error accessing microphone: {str(e)}")
+                    st.error(f"Error: {str(e)}")
                 
                 
 
