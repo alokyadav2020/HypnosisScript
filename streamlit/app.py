@@ -178,6 +178,9 @@ import time
 from openai import OpenAI
 import io
 import wave
+from dotenv import load_dotenv
+from elevenlabs.client import ElevenLabs
+from elevenlabs import play
 
 st.set_page_config(
     page_title="AI Hypnosis Consultation",
@@ -187,6 +190,19 @@ st.set_page_config(
 CURRENT_TIME = "2025-02-03 14:56:58"
 CURRENT_USER = "🧘"
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
+
+def scriptvoice(script):
+    client_11lab = ElevenLabs(api_key=st.secrets['ELEVENLABS_API_KEY'])
+    audio = client_11lab.text_to_speech.convert(
+    text=script,
+    voice_id="JBFqnCBsd6RMkjVDRZzb",
+    model_id="eleven_multilingual_v2",
+    output_format="mp3_44100_128",
+
+    
+)
+    return audio
+
 def initialize_session_state():
     if 'messages' not in st.session_state:
         st.session_state.messages = []
@@ -230,6 +246,10 @@ def handle_user_input(user_input: str):
                     "content": "Thank you for sharing all the information. Here's your personalized hypnosis script:"
                 })
                 st.session_state.messages.append({"role": "assistant", "content": script})
+                audio = scriptvoice(script)
+                audio_buffer = io.BytesIO(audio)
+                
+                st.session_state.messages.append({"role": "assistant", "content": st.audio(audio_buffer, format="audio/mp3")})
 def speech_to_text(audio_data):
     with open(audio_data, "rb") as audio_file:
         transcript = client.audio.transcriptions.create(

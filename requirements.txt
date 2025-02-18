@@ -8,5 +8,6 @@ python-dotenv
 langchain_community
 openai
 langchain-deepseek
+elevenlabs
 
 -e .

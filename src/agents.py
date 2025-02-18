@@ -27,10 +27,13 @@ class ConversationalAgent:
         )
 
     def get_next_response(self, user_input: str = None) -> str:
+        
         if user_input is None:
+            print("iser_input None")
             return self.conversation.predict(
                 input="Start the conversation through prompt questions."
             )
+        print(f"user_input : {user_input}")
         return self.conversation.predict(input=user_input)
 
     def get_conversation_history(self) -> dict:
