@@ -14,11 +14,9 @@ class ConversationalAgent:
         elif llm_name == "anthropic":
            self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=500,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         elif llm_name == "deepseek":
-            self.llm = ChatDeepSeek(model_name="deepseek-reasoner",max_tokens=500,api_key=st.secrets['DEEPSEEK_API_KEY'],temperature=0)
+            self.llm = ChatDeepSeek(model_name="deepseek-chat",max_tokens=500,api_key=st.secrets['DEEPSEEK_API_KEY'],temperature=0)
             
-
-        # 
-        self.memory = ConversationBufferMemory()
+        self.memory = ConversationBufferMemory(memory_key='history')
         self.conversation = ConversationChain(
             llm=self.llm,
             memory=self.memory,
@@ -27,14 +25,17 @@ class ConversationalAgent:
         )
 
     def get_next_response(self, user_input: str = None) -> str:
-        
         if user_input is None:
-            print("iser_input None")
+            print("user_input None")
             return self.conversation.predict(
-                input="Start the conversation through prompt questions."
+                input="Start the conversation through prompt questions.",
+                history=self.memory.chat_memory.messages
             )
         print(f"user_input : {user_input}")
-        return self.conversation.predict(input=user_input)
+        return self.conversation.predict(
+            input=user_input,
+            history=self.memory.chat_memory.messages
+        )
 
     def get_conversation_history(self) -> dict:
         return {
@@ -62,7 +63,7 @@ class HypnosisScriptGenerator:
         elif llm_name == "anthropic":
            self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",max_tokens_to_sample=6000,api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         elif llm_name == "deepseek":
-            self.llm = ChatDeepSeek(model_name="gpt-3.5-turbo",max_tokens=6000,api_key=st.secrets['DEEPSEEK_API_KEY'],temperature=0)
+            self.llm = ChatDeepSeek(model_name="deepseek-reasoner",max_tokens=6000,api_key=st.secrets['DEEPSEEK_API_KEY'],temperature=0)
             
         self.script_chain = LLMChain(
             llm=self.llm,
