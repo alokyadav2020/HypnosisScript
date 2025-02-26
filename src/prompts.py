@@ -13,10 +13,13 @@ def get_prompt(prompt_type):
     return result[0] if result else ''
 
 
+conversation_db_prompt = get_prompt('conversation_prompt')
+validation_db_prompt = get_prompt('validation_prompt')
+script_generation_db_prompt = get_prompt('script_generation_prompt')
 
 CONVERSATION_PROMPT = PromptTemplate(
     input_variables=["history", "input"],
-    template=f"""
+    template="""
     You are an AI-based hypnotherapy assistant designed to guide users through a personalized session. Your tone is warm, empathetic, and professional. Use casual language with occasional emojis for warmth. Follow this structure:
 
 You will first introduce yourself with these exact words, Only for first time conversation:
@@ -24,29 +27,27 @@ You will first introduce yourself with these exact words, Only for first time co
 Then your task is to gather information through natural conversation using these specific questions:  Your task is to gather information through natural conversation using these specific questions:
 
 
-    {get_prompt('conversation_prompt')}
-
-    **Previous Conversation**:  
-    {{history}}  
+     """ + conversation_db_prompt + """
+   **Previous Conversation**:  
+    {history}  
 
     **Current Input**:  
-    {{input}}
-
+    {input}
     Once you get respnse from user do not start with introduction again. Just continue with the conversation.
     """
 )
 
 VALIDATION_PROMPT = PromptTemplate(
     input_variables=["conversation_history"],
-    template=f"""
+    template="""
     As a validation agent, your task is to check if all required questions have been asked and answered 
     in the conversation. The required questions are:
 
-   {get_prompt('validation_prompt')}
+   """ + validation_db_prompt + """
     
 
     Conversation History:
-    {{conversation_history}}
+    {conversation_history}
 
     Return ONLY "True" if ALL questions have been asked and answered adequately.
     Return ONLY "False" if any questions are missing or inadequately answered.
@@ -55,13 +56,14 @@ VALIDATION_PROMPT = PromptTemplate(
 
 SCRIPT_GENERATION_PROMPT = PromptTemplate(
     input_variables=["conversation_history"],
-    template=f"""
+    template="""
 
     Use this this conversation histry to generate a hypnosis script for the client.
      Conversation History:
-    {{conversation_history}}
+    {conversation_history}
 
-      {get_prompt('script_generation_prompt')}
+    """ + script_generation_db_prompt + """
+    
 
     """
 )
