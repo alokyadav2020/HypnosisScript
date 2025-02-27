@@ -2,7 +2,7 @@
 
 import streamlit as st
 from datetime import datetime
-from agents_1 import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
+from src.agents import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
 from src.models import ChatMessage
 import speech_recognition as sr
 from typing import Optional
