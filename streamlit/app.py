@@ -138,10 +138,10 @@ def main():
             st.session_state.conversation_agent = ConversationalAgent(llm_name="anthropic")
             st.session_state.script_generator = HypnosisScriptGenerator(llm_name="anthropic")
           
+          
         elif selected_model == "deepseek":
             st.session_state.conversation_agent = ConversationalAgent(llm_name="deepseek")
             st.session_state.script_generator = HypnosisScriptGenerator(llm_name="deepseek")
-           
         st.write(f"Current User: {CURRENT_USER}")
         st.write(f"Current Time (UTC): {CURRENT_TIME}")
         

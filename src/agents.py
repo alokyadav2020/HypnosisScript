@@ -8,7 +8,7 @@ from langchain_deepseek import ChatDeepSeek
 import streamlit as st
 
 class ConversationalAgent:
-    def _init_(self,llm_name:str):
+    def __init__(self,llm_name:str):
         if llm_name == "openai":
             self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=500, api_key=st.secrets['OPENAI_API_KEY'],temperature=0.1)
         elif llm_name == "anthropic":
@@ -41,7 +41,7 @@ class ConversationalAgent:
         }
 
 class ValidationAgent:
-    def _init_(self):
+    def __init__(self):
         self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         self.VALIDATION_PROMPT = PromptManager()
         self.validation_chain = LLMChain(
@@ -69,7 +69,7 @@ class ValidationAgent:
         return is_valid
 
 class HypnosisScriptGenerator:
-    def _init_(self,llm_name:str):
+    def __init__(self,llm_name:str):
         if llm_name == "openai":
             self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=6000, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
         elif llm_name == "anthropic":
