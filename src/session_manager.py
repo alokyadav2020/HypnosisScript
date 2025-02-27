@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from typing import List, Dict
 from models import ChatMessage
-from src.agents import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
+from agents_1 import ConversationalAgent, ValidationAgent, HypnosisScriptGenerator
 
 @dataclass
 class ChatSession:

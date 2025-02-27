@@ -1,4 +1,4 @@
-
+# agents.py
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain.chains import ConversationChain, LLMChain
@@ -8,7 +8,7 @@ from langchain_deepseek import ChatDeepSeek
 import streamlit as st
 
 class ConversationalAgent:
-    def _init_(self,llm_name:str):
+    def __init__(self,llm_name:str):
         if llm_name == "openai":
             self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=500, api_key=st.secrets['OPENAI_API_KEY'],temperature=0.1)
         elif llm_name == "anthropic":
@@ -26,9 +26,11 @@ class ConversationalAgent:
 
     def get_next_response(self, user_input: str = None) -> str:
         if user_input is None:
+            print("user_input None")
             return self.conversation.predict(
-                input="Hi there! I'm John, your AI-based hypnotherapist. 🌟 To create a session that's just right for you, I'll start by asking a few questions. The more details you share, the better—and feel free to use the mic button if that's easier! Everything you share is confidential, and there's no right or wrong answer. Let's begin whenever you're ready."
+                input="Hi there! I'm John, your AI-based hypnotherapist. 🌟 To create a session that's just right for you, I'll start by asking 5 questions. The more details you share, the better—and feel free to use the mic button if that's easier! Everything you share is confidential, and there's no right or wrong answer. Let's begin whenever you're ready."
             )
+        print(f"user_input : {user_input}")
         return self.conversation.predict(
             input=user_input,
             history = self.memory.chat_memory.messages
@@ -41,7 +43,7 @@ class ConversationalAgent:
         }
 
 class ValidationAgent:
-    def _init_(self):
+    def __init__(self):
         self.llm = ChatAnthropic(model_name="claude-3-5-sonnet-latest",api_key=st.secrets['ANTHROPIC_API_KEY'],temperature=0)
         self.VALIDATION_PROMPT = PromptManager()
         self.validation_chain = LLMChain(
@@ -51,25 +53,12 @@ class ValidationAgent:
         )
 
     def validate_conversation(self, conversation_history: dict) -> bool:
-        """Check if we have enough information to generate a hypnosis script."""
         result = self.validation_chain.run(conversation_history=str(conversation_history))
-        print(f"Validation result: {result}")
-        
-        # More flexible check - look for any positive indicators
-        result_lower = result.strip().lower()
-        is_valid = (
-            "true" in result_lower or 
-            "yes" in result_lower or
-            "complete" in result_lower or 
-            "sufficient" in result_lower or
-            "enough information" in result_lower
-        )
-        
-        print(f"Is conversation valid: {is_valid}")
-        return is_valid
+        print(f"Validation result : {result}")
+        return result.strip().lower() == "true"
 
 class HypnosisScriptGenerator:
-    def _init_(self,llm_name:str):
+    def __init__(self,llm_name:str):
         if llm_name == "openai":
             self.llm = ChatOpenAI(model="gpt-4o",max_completion_tokens=6000, api_key=st.secrets['OPENAI_API_KEY'],temperature=0)
         elif llm_name == "anthropic":
