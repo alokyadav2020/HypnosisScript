@@ -338,19 +338,19 @@ def main():
         display_chat_message(message)
 
     # Initialize chat with welcome message if empty
-    if not st.session_state.messages:
-        welcome_message = {
-            "role": "assistant",
-            "content": (
-                f"I'll help you create a personalized hypnosis script. Let's begin our conversation to understand your needs better."
-            )
-        }
-        # st.session_state.messages.append(welcome_message)
-        initial_response = st.session_state.conversation_agent.get_next_response(
-            "Start the conversation by asking the first question."
-        )
-        st.session_state.messages.append({"role": "assistant", "content": initial_response})
-        st.rerun()
+    # if not st.session_state.messages:
+    #     welcome_message = {
+    #         "role": "assistant",
+    #         "content": (
+    #             "Hi there! I'm John, your AI-based hypnotherapist. 🌟 To create a session that's just right for you, I'll start by asking 5 questions. The more details you share, the better—and feel free to use the mic button if that's easier! Everything you share is confidential, and there's no right or wrong answer. Let's begin whenever you're ready."
+    #         )
+    #     }
+        #st.session_state.messages.append(welcome_message)
+        # initial_response = st.session_state.conversation_agent.get_next_response(
+        #     "Start the conversation by asking the first question."
+        # )
+        # st.session_state.messages.append({"role": "assistant", "content": initial_response})
+        # st.rerun()
 
     # Input handling
     if input_method == "Voice":
