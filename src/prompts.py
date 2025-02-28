@@ -119,8 +119,11 @@ class PromptManager:
             input_variables=["conversation_history"],
             template="""
             As a validation agent, your task is to check if all required questions have been asked and answered 
-            in the conversation History. The required questions are:
-            user can give all answer at a time or one by one. Return "True" if all questions are answered and "False" if any question is missing or inadequately answered.
+            in the conversation History. 
+            user can give all answer at a time or one by one. 
+            Return "True" if all questions are answered and "False" if any question is missing or inadequately answered.
+
+            The required questions are:
 
             """ + self.validation_db_content + """
 
