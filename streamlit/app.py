@@ -25,24 +25,66 @@ MAX_QUESTIONS = 4  # Maximum number of questions before generating the script
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
 
 def scriptvoice(script):
-    client_11lab = ElevenLabs(api_key=st.secrets['ELEVENLABS_API_KEY'])
-    audio = client_11lab.text_to_speech.convert(
-    text=script,
-    voice_id="JBFqnCBsd6RMkjVDRZzb",
-    model_id="eleven_multilingual_v2",
-    output_format="mp3_44100_128",
-    )
-    return audio
+
+   
+    try:
+        client_11lab = ElevenLabs(api_key=st.secrets['ELEVENLABS_API_KEY'])
+        
+        # Get the audio as a generator
+        audio_generator = client_11lab.generate(
+            text=script,
+            voice="JBFqnCBsd6RMkjVDRZzb",
+            model="eleven_multilingual_v2"
+        )
+        
+        # Convert generator to bytes
+        if hasattr(audio_generator, '__iter__'):
+            audio_bytes = b''
+            for chunk in audio_generator:
+                audio_bytes += chunk
+            return audio_bytes
+        else:
+            # If it's already bytes, return as-is
+            return audio_generator
+            
+    except Exception as e:
+        print(f"Audio generation error: {str(e)}")
+        st.error(f"Audio generation failed: {str(e)}")
+        return None
+    # client_11lab = ElevenLabs(api_key=st.secrets['ELEVENLABS_API_KEY'])
+    # audio = client_11lab.text_to_speech.convert(
+    # text=script,
+    # voice_id="JBFqnCBsd6RMkjVDRZzb",
+    # model_id="eleven_multilingual_v2",
+    # output_format="mp3_44100_128",
+    # )
+    # return audio
+    # client_11lab = ElevenLabs(api_key=st.secrets['ELEVENLABS_API_KEY'])
+    
+    # # Method 1: Convert generator to bytes
+    # audio_generator = client_11lab.text_to_speech.convert(
+    #     text=script,
+    #     voice_id="JBFqnCBsd6RMkjVDRZzb",
+    #     model_id="eleven_multilingual_v2",
+    #     output_format="mp3_44100_128",
+    # )
+    
+    # # Collect all bytes from the generator
+    # audio_bytes = b''
+    # for chunk in audio_generator:
+    #     audio_bytes += chunk
+    
+    # return audio_bytes
 
 def initialize_session_state():
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     if 'conversation_agent' not in st.session_state:
-        st.session_state.conversation_agent = None
+        st.session_state.conversation_agent = ConversationalAgent()
     if 'validation_agent' not in st.session_state:
         st.session_state.validation_agent = ValidationAgent()
     if 'script_generator' not in st.session_state:
-        st.session_state.script_generator = None
+        st.session_state.script_generator = HypnosisScriptGenerator()
     if 'script_generated' not in st.session_state:
         st.session_state.script_generated = False
     if 'last_audio' not in st.session_state:
@@ -82,9 +124,7 @@ def handle_user_input(user_input: str):
                 })
             
             with st.spinner("Generating your personalized hypnosis script..."):
-                script = st.session_state.script_generator.generate_script(
-                    conversation_history=conversation_history
-                )
+                script = st.session_state.script_generator.generate_script(conversation_history=conversation_history)
                 st.session_state.script_generated = True
                 st.session_state.messages.append({
                     "role": "assistant",
@@ -95,11 +135,12 @@ def handle_user_input(user_input: str):
                 # Generate audio for the script
                 try:
                     audio = scriptvoice(script)
+                    
                     audio_buffer = io.BytesIO(audio)
                     st.session_state.messages.append({"role": "assistant", "content": "Listen to your hypnosis session:"})
-                    st.session_state.messages.append({"role": "assistant", "content": st.audio(audio_buffer, format="audio/mp3")})
+                    st.session_state.messages.append({"role": "assistant", "content": st.audio(audio_buffer, format="audio/wav",autoplay=True)})
                 except Exception as e:
-                    st.session_state.messages.append({"role": "assistant", "content": f"Audio generation failed: {str(e)}"})
+                    st.session_state.messages.append({"role": "assistant", "content": f"Audio failed: {str(e)}"})
 
 def speech_to_text(audio_data):
     with open(audio_data, "rb") as audio_file:
@@ -129,21 +170,21 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        selected_model = st.selectbox("Select a model", ["openai", "anthropic", "deepseek"])
-        if selected_model == "openai":
-            st.session_state.conversation_agent = ConversationalAgent(llm_name="openai")
-            st.session_state.script_generator = HypnosisScriptGenerator(llm_name="openai")
+        # selected_model = st.selectbox("Select a model", ["openai", "anthropic", "deepseek"])
+        # if selected_model == "openai":
+        #     st.session_state.conversation_agent = ConversationalAgent(llm_name="openai")
+        #     st.session_state.script_generator = HypnosisScriptGenerator(llm_name="openai")
            
-        elif selected_model == "anthropic":
-            st.session_state.conversation_agent = ConversationalAgent(llm_name="anthropic")
-            st.session_state.script_generator = HypnosisScriptGenerator(llm_name="anthropic")
+        # elif selected_model == "anthropic":
+        #     st.session_state.conversation_agent = ConversationalAgent(llm_name="anthropic")
+        #     st.session_state.script_generator = HypnosisScriptGenerator(llm_name="anthropic")
           
           
-        elif selected_model == "deepseek":
-            st.session_state.conversation_agent = ConversationalAgent(llm_name="deepseek")
-            st.session_state.script_generator = HypnosisScriptGenerator(llm_name="deepseek")
-        st.write(f"Current User: {CURRENT_USER}")
-        st.write(f"Current Time (UTC): {CURRENT_TIME}")
+        # elif selected_model == "deepseek":
+        #     st.session_state.conversation_agent = ConversationalAgent(llm_name="deepseek")
+        #     st.session_state.script_generator = HypnosisScriptGenerator(llm_name="deepseek")
+        # st.write(f"Current User: {CURRENT_USER}")
+        # st.write(f"Current Time (UTC): {CURRENT_TIME}")
         
         if st.button("Start New Chat"):
             st.session_state.messages = []

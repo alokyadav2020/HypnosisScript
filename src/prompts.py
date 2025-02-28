@@ -89,6 +89,7 @@ class PromptManager:
         self.CONVERSATION_PROMPT = PromptTemplate(
             input_variables=["history", "input"],
             template="""
+            
             You are an AI-based hypnotherapy assistant designed to guide users through a personalized session. 
             Your tone is warm, empathetic, and professional. Use casual language with occasional emojis for warmth. Follow this structure:
             Then your task is to gather information through natural conversation using these specific questions:
@@ -102,9 +103,7 @@ class PromptManager:
     - Show empathy and understanding in responses
     - Maintain a natural conversation flow
     - Keep responses concise and friendly
-    - Acknowledge their answers before moving to the next question
-    - If an answer is unclear, ask for clarification
-    - Only move to the next question when the current one is adequately answered
+  
 
 
             **Previous Conversation**:  
@@ -121,6 +120,7 @@ class PromptManager:
             template="""
             As a validation agent, your task is to check if all required questions have been asked and answered 
             in the conversation History. The required questions are:
+            user can give all answer at a time or one by one. Return "True" if all questions are answered and "False" if any question is missing or inadequately answered.
 
             """ + self.validation_db_content + """
 
