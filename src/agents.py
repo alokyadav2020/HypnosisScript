@@ -35,7 +35,7 @@ class ConversationalAgent:
     def get_next_response(self, user_input: str = None) -> str:
         if user_input is None:
             return self.conversation.predict(
-                input="Hi there! I'm John, your AI-based hypnotherapist. 🌟 To create a session that's just right for you, I'll start by asking a few questions. The more details you share, the better—and feel free to use the mic button if that's easier! Everything you share is confidential, and there's no right or wrong answer. Let's begin whenever you're ready."
+                input="Follow prompt to star conversation"
             )
         return self.conversation.predict(
             input=user_input

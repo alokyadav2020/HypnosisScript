@@ -113,15 +113,26 @@ def handle_user_input(user_input: str):
     if not st.session_state.script_generated:
         conversation_history = st.session_state.conversation_agent.get_conversation_history()
         is_complete = st.session_state.validation_agent.validate_conversation(conversation_history)
+
+        # if not is_complete:
+        #      with st.spinner("Thinking..."):
+        #         response = st.session_state.conversation_agent.get_next_response(user_input)
+        #         st.session_state.messages.append({"role": "assistant", "content": response})
+    
+
         
         # Force completion after MAX_QUESTIONS
         if is_complete or st.session_state.question_count >= MAX_QUESTIONS:
-            # Notify user if we're forcing completion based on question count
-            if not is_complete and st.session_state.question_count >= MAX_QUESTIONS:
-                st.session_state.messages.append({
+            st.session_state.messages.append({
                     "role": "assistant",
-                    "content": f"Thanks for sharing your experiences with me. I've gathered enough information to create a personalized hypnosis script for you."
+                    "content": "Thanks for sharing your experiences with me. I've gathered enough information to create a personalized hypnosis script for you."
                 })
+            # Notify user if we're forcing completion based on question count
+            # if not is_complete and st.session_state.question_count >= MAX_QUESTIONS:
+            #     st.session_state.messages.append({
+            #         "role": "assistant",
+            #         "content": f"Thanks for sharing your experiences with me. I've gathered enough information to create a personalized hypnosis script for you."
+            #     })
             
             with st.spinner("Generating your personalized hypnosis script..."):
                 script = st.session_state.script_generator.generate_script(conversation_history=conversation_history)
